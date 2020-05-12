@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+
+<head th:replace="partials/partials :: head('HELLO')"></head>
+
+<body>
+<nav th:replace="partials/partials :: navbar"></nav>
+
+<h1>Welcome</h1>
+<h2>Get started by choosing a number below:</h2>
+
+<button type="button" class="btn btn-warning"><a href="/roll/1">1</a></button>
+<button type="button" class="btn btn-info"><a href="/roll/2">2</a></button>
+<button type="button" class="btn btn-secondary"><a href="/roll/3">3</a></button>
+<button type="button" class="btn btn-success"><a href="/roll/4">4</a></button>
+<button type="button" class="btn btn-light"><a href="/roll/5">5</a></button>
+<button type="button" class="btn btn-dark"><a href="/roll/6">6</a></button>
+
+
+<p th:text="${message}"></p>
+
+
+
+<div th:replace="partials/partials :: footer"></div>
+</body>
+</html>
