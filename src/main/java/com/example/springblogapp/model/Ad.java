@@ -1,4 +1,4 @@
-package com.example.springblogapp;
+package com.example.springblogapp.model;
 
 public class Ad {
 
