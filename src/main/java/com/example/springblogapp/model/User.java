@@ -16,7 +16,7 @@ public class User {
     @Column(nullable = false)
     private String email;
 
-    @Column
+    @Column(nullable = false)
     private String password;
 
     // Each user can have multiple ads = @OneToMany
@@ -26,6 +26,22 @@ public class User {
     // Set up user relationship to post
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<Post> posts;
+
+    public User() {
+    }
+
+    public User (long id, String username, String email, String password){
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
+
+    public User (String username, String email, String password){
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
 
     public long getId(){
         return id;

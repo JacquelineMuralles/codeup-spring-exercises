@@ -24,17 +24,16 @@ public class Post {
 
     public Post() {}
 
-    public Post(String title, String body, User user){
+
+    public Post(long id, String title, String body) {
+        this.id = id;
         this.title = title;
         this.body = body;
-        this.user = user;
     }
 
-    public Post(String title, String body, User user, long id){
+    public Post(String title, String body) {
         this.title = title;
         this.body = body;
-        this.user = user;
-        this.id = id;
     }
 
     public String getTitle() {
