@@ -1,7 +1,7 @@
 package com.example.springblogapp.model;
 import javax.persistence.*;
 
-@Entity
+@Entity//allows this bean/model to connect to the db specifically table's columns
 @Table(name="books")
 public class Book {
     @Id

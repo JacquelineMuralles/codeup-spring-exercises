@@ -1,10 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:fragment="head(title)">
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title></title>
 </head>
 <body>
+<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-light bg-light"></nav>
 
+
+
+<!--go through each post ${posts ArrayList}-->
+<div class="card mb-5" style="width: 18rem;"  th:each="post : ${posts}">
+    <div class="card-body" >
+        <!--creating each individual post item with post.title and post.body-->
+        <h3 class="card-title" th:text="${post.title}"></h3>
+        <h4 class="card-subtitle text-muted">Card Subtitle</h4>
+        <p class="card-text" th:text="${post.body}"></p>
+        <a href="#" class="card-link">Card link</a>
+        <a href="#" class="card-link">Another link</a>
+        
+    </div>
+</div>
+
+
+<div th:fragment="footer"></div>
 </body>
 </html>
