@@ -4,9 +4,11 @@ import com.example.springblogapp.model.Post;
 import com.example.springblogapp.model.User;
 import com.example.springblogapp.repositories.PostRepository;
 import com.example.springblogapp.repositories.UserRepository;
+import com.example.springblogapp.services.EmailService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +23,12 @@ public class PostController {
     //Dependency Injection (brings jpa repo over and acts like the dao)
     private PostRepository postRepo;
     private UserRepository userDao;
+    private EmailService emailService;
 
-    public PostController(UserRepository userDao, PostRepository postRepo){//controller class constructor
+    public PostController(UserRepository userDao, PostRepository postRepo, EmailService emailService){//controller class constructor
         this.userDao = userDao;
         this.postRepo = postRepo;
+        this.emailService = emailService;
     }
 
 //    @GetMapping("/posts")//this gets typed in url after localhost8080
@@ -82,44 +86,38 @@ public class PostController {
 
 //********************************SENDS USER TO A FORM TO CREATE A POST***************
     @GetMapping("/posts/create")
-    public String createPost(){
+    public String createPost(Model model){
+        User user = userDao.getOne(1L);
+        Post post = new Post();
+        post.setUser(user);
+        model.addAttribute("post", post);
         return "posts/create";
     }
 
 //*******************************CREATES A NEW POST FROM THE FILLED OUT FORM*****************
     @PostMapping("/posts/create")
-    public String submitCreatePost(@RequestParam String title, @RequestParam String body) {
-        // before saving a post to the dB, assign a user to that post
-        // for our purposes, we'll assign user id 1 manually
-        User author = userDao.getOne(1L);
-        Post newPost = new Post();
-        newPost.setTitle(title);
-        newPost.setBody(body);
-        // manually assign user id 1 to this new post
-        newPost.setUser(author);
-        postRepo.save(newPost);
+    public String submitCreatePost(@ModelAttribute Post post) {
+        postRepo.save(post);
+        emailService.prepareAndSend(post, "You created a new post.",
+                "Title:"+post.getTitle()+
+                        "\nPost:"+post.getBody());
         return "redirect:/posts";
     }
 
 //*******************************TAKES USER TO EDIT PAGE FOR POST BY ID***************************
-//    @GetMapping("/posts/{id}/edit")
-//    public String getEditPostForm(@PathVariable long id, Model model){
-//        Post aPost = postRepo.getOne(id);
-//        model.addAttribute("post", aPost);
-//        return "posts/edit";
-//    }
+    @GetMapping("/posts/{id}/edit")
+    public String getEditPostForm(@PathVariable long id, Model model){
+        Post aPost = postRepo.getOne(id);
+        model.addAttribute("post", aPost);
+        return "posts/edit";
+    }
 
 //******************TAKES EDITS FROM EDIT PAGE AND IMPLEMENTS THEM FOR THE POST OF THAT ID************
-//    @PostMapping("/posts/{id}/edit")
-//    public String savePostEdit(@PathVariable long id, @RequestParam String title, @RequestParam String body, Model model){
-//        Post editPost = postRepo.getOne(id);
-//
-//        editPost.setTitle(title);
-//        editPost.setBody(body);
-//        postRepo.save(editPost);
-//
-//        return "redirect:/posts/" + id;
-//    }
+    @PostMapping("/posts/edit")
+    public String savePostEdit(@ModelAttribute Post post){
+        postRepo.save(post);
+        return "redirect:/posts/" + post.getId();
+    }
 
 //******************************TAKES USER TO DELETE POST FORM FOR THE POST WITH THAT ID*************************
 //    @GetMapping("/posts/{id}/delete")

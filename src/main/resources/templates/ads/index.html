@@ -8,12 +8,12 @@
 <nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-light bg-light"></nav>
 
 <div class="container">
-    <h2 th:text="${post.title}"></h2>
-    <p>written by: <em th:text="${post.user.email}"></em></p>
-    <br>
-    <p style="padding-left: 2rem;" th:text="${post.getBody()}"></p>
+    <h2>Ad List</h2>
+    <div th:each="ad : ${ads}">
+        <p style="font-weight: bold;" th:text="${ad.title}"></p>
+        <p style="padding-left: 2rem;" th:text="${ad.description}"></p>
+    </div>
 </div>
-
 
 <div th:fragment="footer"></div>
 </body>

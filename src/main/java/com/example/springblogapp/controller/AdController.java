@@ -4,6 +4,7 @@ import com.example.springblogapp.model.Ad;
 import com.example.springblogapp.model.User;
 import com.example.springblogapp.repositories.AdRepository;
 import com.example.springblogapp.repositories.UserRepository;
+import com.example.springblogapp.services.EmailService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,10 +19,12 @@ public class AdController {
     //repositories below contain all the functions of JPARepository
     private UserRepository userDao;
     private AdRepository adDao;
+    private EmailService emailService;
 
-    public AdController(UserRepository userDao, AdRepository adDao) {
+    public AdController(UserRepository userDao, AdRepository adDao, EmailService emailService) {
         this.userDao = userDao;
         this.adDao = adDao;
+        this.emailService = emailService;
     }
 
     @GetMapping("/ads")
@@ -58,6 +61,9 @@ public class AdController {
     @PostMapping("/ads/create")
     public RedirectView createAd(@ModelAttribute Ad ad) {
         adDao.save(ad);
+        emailService.prepareAndSend(ad, "You created an ad.",
+                "Title:"+ad.getTitle()+
+                        "\nDescription:"+ad.getDescription());
         return new RedirectView("/ads/" + ad.getId());
     }
 }
