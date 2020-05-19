@@ -5,6 +5,7 @@ import com.example.springblogapp.model.User;
 import com.example.springblogapp.repositories.PostRepository;
 import com.example.springblogapp.repositories.UserRepository;
 import com.example.springblogapp.services.EmailService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -97,18 +98,21 @@ public class PostController {
 //*******************************CREATES A NEW POST FROM THE FILLED OUT FORM*****************
     @PostMapping("/posts/create")
     public String submitCreatePost(@ModelAttribute Post post) {
-        postRepo.save(post);
+        User author = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        System.out.println(author.getEmail());
+        post.setUser(author);
+        post = postRepo.save(post);
         emailService.prepareAndSend(post, "You created a new post.",
-                "Title:"+post.getTitle()+
-                        "\nPost:"+post.getBody());
+                "Your post \""+post.getTitle()+
+                        "\" was successfully created.\nYou can see it at http://localhost:8080/posts/"+post.getId()+"\nThank you.");
         return "redirect:/posts";
     }
 
 //*******************************TAKES USER TO EDIT PAGE FOR POST BY ID***************************
     @GetMapping("/posts/{id}/edit")
     public String getEditPostForm(@PathVariable long id, Model model){
-        Post aPost = postRepo.getOne(id);
-        model.addAttribute("post", aPost);
+        Post post = postRepo.getOne(id);
+        model.addAttribute("post", post);
         return "posts/edit";
     }
 
@@ -135,7 +139,13 @@ public class PostController {
 //        return "redirect:/posts";
 //    }
 
-
-
+    @GetMapping("/posts/editcreate")
+    public String editCreatePost(Model model) {
+        User user = userDao.getOne(1L);
+        Post post = new Post();
+        post.setUser(user);
+        model.addAttribute("post", post);
+        return "/posts/edit";
+    }
 
 }

@@ -9,10 +9,10 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-@Service("mailService")
+@Service("EmailService")
 public class EmailService {
 
-    @Autowired
+//    @Autowired
     public JavaMailSender emailSender;
 
     @Value("${spring.mail.from}")

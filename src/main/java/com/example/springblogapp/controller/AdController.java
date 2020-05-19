@@ -40,19 +40,19 @@ public class AdController {
         return "ads/show";
     }
 
-    @GetMapping("/ads/{id}/edit")
-    public String editAd(@PathVariable long id, Model model) {
-        Ad ad = adDao.getOne(id);
-        User user = userDao.getOne(1L);
-        ad.setUser(user);
-        model.addAttribute("ad", ad);
-        return "ads/create";
-    }
+//    @GetMapping("/ads/{id}/edit")
+//    public String editAd(@PathVariable long id, Model model) {
+//        Ad ad = adDao.getOne(id);
+//        User user = userDao.getOne(1L);
+//        ad.setUser(user);
+//        model.addAttribute("ad", ad);
+//        return "ads/create";
+//    }
 
     @GetMapping("/ads/create")
-    public String gotoCreateAdForm(Model model) {
-        Ad ad = new Ad();
+    public String showCreateForm(Model model) {
         User user = userDao.getOne(1L);
+        Ad ad = new Ad();
         ad.setUser(user);
         model.addAttribute("ad", ad);
         return "ads/create";
@@ -60,6 +60,8 @@ public class AdController {
 
     @PostMapping("/ads/create")
     public RedirectView createAd(@ModelAttribute Ad ad) {
+        User user = userDao.getOne(1L);
+        ad.setUser(user);
         adDao.save(ad);
         emailService.prepareAndSend(ad, "You created an ad.",
                 "Title:"+ad.getTitle()+

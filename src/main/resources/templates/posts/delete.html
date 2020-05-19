@@ -1,26 +1,27 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head th:fragment="head(title)">
-    <meta charset="UTF-8">
+<head>
     <title>Posts</title>
+    <div th:replace="/partials/partials :: head"/>
 </head>
 <body>
-
-<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-light bg-light"></nav>
+<div th:replace="partials/partials :: top_banner"></div>
+<div th:replace="partials/partials :: standard_nav"></div>
 
 <div class="container">
     <h2>Delete Post</h2>
 
-    <form th:action="@{'/posts/'+{post.id}+'/delete'}" method="post">
-
-        <h1>Are you sure you want to delete this post?</h1>
-        <button>Duh</button>
-        <a th:href="@{'/posts/'+${post.id}}">Oh no! Wait!</a>
+    <form th:action="@{'/posts/'+${post.id}+'/delete'}" method="post">
+        <!--        <input type="hidden" th:text="${post.id}"></input>-->
+        <h1>Are you sure?</h1>
+        <button>yes, delete</button>
+        <a th:href="@{'/posts/'+${post.id}}">No, don't delete</a>
 
     </form>
 </div>
 
 
-<div th:fragment="footer"></div>
+<div th:replace="partials/partials :: footer_nav"/>
+<div th:replace="partials/partials :: footer"/>
 </body>
 </html>

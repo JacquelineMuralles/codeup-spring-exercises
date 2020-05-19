@@ -52,7 +52,6 @@ public class Ad {
     public long getId(){
         return id;
     }
-
     public void setId(long id){
         this.id = id;
     }
@@ -60,8 +59,6 @@ public class Ad {
     public String getTitle() {
         return title;
     }
-
-
     public void setTitle(String title) {
         this.title = title;
     }
@@ -69,7 +66,6 @@ public class Ad {
     public String getDescription() {
         return description;
     }
-
     public void setDescription(String description) {
         this.description = description;
     }
@@ -77,7 +73,6 @@ public class Ad {
     public User getUser(){
         return user;
     }
-
     public void setUser(User user){
         this.user = user;
     }
@@ -85,7 +80,6 @@ public class Ad {
     public List<AdImage> getImages(){
         return images;
     }
-
     public void setImages(List<AdImage> images){
         this.images = images;
     }
@@ -93,7 +87,6 @@ public class Ad {
     public List<Category> getCategories(){
         return categories;
     }
-
     public void setCategories(List<Category> categories){
         this.categories = categories;
     }

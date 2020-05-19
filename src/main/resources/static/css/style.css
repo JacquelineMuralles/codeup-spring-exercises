@@ -1,0 +1,36 @@
+.top_banner{
+    font-size: 5rem;
+    text-align: center;
+    color: #FDC1C5;
+    background-color: #107AB0;
+}
+nav{
+    background-color: #FDC1C5;
+    color: #107AB0;
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin: 0 0 100px;
+    background-color: #FD5956;
+    color: white;
+;
+}
+
+.footer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 35px;
+    width: 100%;
+    background-color: #FDC1C5;
+    color: #107AB0;
+    text-align: center;
+}
+
+.footer > .navbar-nav > li > a {padding-top:5px !important; padding-bottom:5px !important;}
+.footer > .navbar {min-height:32px !important}

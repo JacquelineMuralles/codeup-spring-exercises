@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head >
     <div th:fragment="head">
         <meta charset="UTF-8" />
         <link rel="stylesheet" href="/webjars/bootstrap/4.4.1-1/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="/css/style.css">
     </div>
 </head>
 <body>
@@ -33,7 +34,7 @@
 
             <!-- right side side content -->
             <ul class="navbar-nav navbar-right mr-auto">
-                <li class="nav-item"><a class="nav-link" href="//users/register">Sign Up</a></li>
+                <li class="nav-item"><a class="nav-link" href="/register">Sign Up</a></li>
                 <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
                 <li class="nav-item"><form th:action="@{/logout}" th:method="post">
                     <button class="nav-link" style="margin-top: 8px">Logout</button>
