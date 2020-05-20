@@ -18,7 +18,10 @@ body {
     margin: 0 0 100px;
     background-color: #FD5956;
     color: white;
-;
+}
+
+.btn-primary{
+    background-color: #107AB0;
 }
 
 .footer {
