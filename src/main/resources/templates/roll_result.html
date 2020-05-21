@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Posts</title>
@@ -9,17 +9,20 @@
 <div th:replace="partials/partials :: standard_nav"></div>
 
 <div class="container">
-    <h2>Delete Post</h2>
 
-    <form th:action="@{'/posts/'+${post.id}+'/delete'}" method="post">
-        <!--        <input type="hidden" th:text="${post.id}"></input>-->
-        <h1>Are you sure?</h1>
-        <button>yes, delete</button>
-        <a th:href="@{'/posts/'+${post.id}}">No, don't delete</a>
+    <heading>
+        <h1>Here are your result</h1>
+    </heading>
+    <h3 th:text="${header}"></h3>
+    <div th:each="diceSet: ${dice}">
+        The roll <span th:text="${diceSetStat.index + 1}"/> result was <span th:text="${diceSet.die1}"/>,
+        <span th:text="${diceSet.die2}"./> <span th:text="${diceSet.result}" />
+    </div>
 
-    </form>
+    <h3 th:text="${message}"></h3>
+
+    <nav th:replace="roll_guess :: roll-guess"/>
 </div>
-
 
 <div th:replace="partials/partials :: footer_nav"/>
 <div th:replace="partials/partials :: footer"/>

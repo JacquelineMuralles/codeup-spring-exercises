@@ -6,10 +6,11 @@ import com.example.springblogapp.repositories.PostRepository;
 import com.example.springblogapp.repositories.UserRepository;
 import com.example.springblogapp.services.EmailService;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,11 +24,11 @@ public class PostController {
 
     //Dependency Injection (brings jpa repo over and acts like the dao)
     private PostRepository postRepo;
-    private UserRepository userDao;
+    private UserRepository userRepo;
     private EmailService emailService;
 
-    public PostController(UserRepository userDao, PostRepository postRepo, EmailService emailService){//controller class constructor
-        this.userDao = userDao;
+    public PostController(UserRepository userRepo, PostRepository postRepo, EmailService emailService){//controller class constructor
+        this.userRepo = userRepo;
         this.postRepo = postRepo;
         this.emailService = emailService;
     }
@@ -88,7 +89,11 @@ public class PostController {
 //********************************SENDS USER TO A FORM TO CREATE A POST***************
     @GetMapping("/posts/create")
     public String createPost(Model model){
-        User user = userDao.getOne(1L);
+        Object obj = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (obj == null || !(obj instanceof UserDetails)) {
+            return "redirect:/login";
+        }
+        User user = (User) obj;
         Post post = new Post();
         post.setUser(user);
         model.addAttribute("post", post);
@@ -98,28 +103,49 @@ public class PostController {
 //*******************************CREATES A NEW POST FROM THE FILLED OUT FORM*****************
     @PostMapping("/posts/create")
     public String submitCreatePost(@ModelAttribute Post post) {
-        User author = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        System.out.println(author.getEmail());
-        post.setUser(author);
-        post = postRepo.save(post);
-        emailService.prepareAndSend(post, "You created a new post.",
-                "Your post \""+post.getTitle()+
-                        "\" was successfully created.\nYou can see it at http://localhost:8080/posts/"+post.getId()+"\nThank you.");
-        return "redirect:/posts";
+        Object obj = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (obj == null || !(obj instanceof UserDetails)) {
+            return "redirect:/login";
+        }
+        User user = (User) obj;
+        post.setUser(user);
+        postRepo.save(post);
+        emailService.prepareAndSend(post, "CREATED Post: " + post.getTitle(),
+                post.getTitle() +"\n\n" +
+                        post.getBody());
+        return "redirect:/posts/" + post.getId();
     }
 
 //*******************************TAKES USER TO EDIT PAGE FOR POST BY ID***************************
     @GetMapping("/posts/{id}/edit")
     public String getEditPostForm(@PathVariable long id, Model model){
+        Object obj = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (obj == null || !(obj instanceof UserDetails)) {
+            return "redirect:/login";
+        }
+        User user = (User) obj;
         Post post = postRepo.getOne(id);
+        if (post.getUser().getId() != user.getId()) {
+            return "redirect:/posts/" + post.getId();
+        }
         model.addAttribute("post", post);
-        return "posts/edit";
+        return "/posts/edit";
     }
 
 //******************TAKES EDITS FROM EDIT PAGE AND IMPLEMENTS THEM FOR THE POST OF THAT ID************
-    @PostMapping("/posts/edit")
-    public String savePostEdit(@ModelAttribute Post post){
+    @PostMapping("/posts/{id}/edit")
+    public String editPost(@PathVariable long id, @ModelAttribute Post post) {
+        Object obj = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (obj == null || !(obj instanceof UserDetails)) {
+            return "redirect:/login";
+        }
+        User user = (User) obj;
+        post.setId(id);
+        post.setUser(user);
         postRepo.save(post);
+        emailService.prepareAndSend(post, "EDITED post: " + post.getTitle(),
+                post.getTitle() +"\n\n" +
+                        post.getBody());
         return "redirect:/posts/" + post.getId();
     }
 
@@ -141,11 +167,20 @@ public class PostController {
 
     @GetMapping("/posts/editcreate")
     public String editCreatePost(Model model) {
-        User user = userDao.getOne(1L);
-        Post post = new Post();
+    Object obj = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (obj == null || !(obj instanceof UserDetails)) {
+        return "redirect:/login";
+    }
+    User user = (User) obj;
+    Post post = new Post();
         post.setUser(user);
         model.addAttribute("post", post);
         return "/posts/edit";
-    }
+}
 
+    @PostMapping("/posts/{id}/delete")
+    public String deleteAd(@PathVariable long id, Model model) {
+        postRepo.deleteById(id);
+        return "redirect:/posts";
+    }
 }
